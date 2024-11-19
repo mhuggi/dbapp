@@ -101,7 +101,6 @@ def get_mongo_notifications():
     except Exception as e:
         return jsonify({"error": str(e)})    
 
-# Sample route to fetch users
 @app.route('/users', methods=['GET'])
 def get_users():
     database_name = request.args.get('database')
@@ -114,11 +113,9 @@ def get_users():
     cursor.execute("SELECT * FROM UserTable;")
     users = cursor.fetchall()
     
-    # Close cursor and connection
     cursor.close()
     conn.close()
 
-    # Convert results to JSON format
     users_list = []
     for user in users:
         users_list.append({
@@ -143,11 +140,9 @@ def get_videos():
     cursor.execute("SELECT * FROM Video;")
     videos = cursor.fetchall()
     
-    # Close cursor and connection
     cursor.close()
     conn.close()
 
-    # Convert results to JSON format
     videos_list = []
     for video in videos:
         duration = str(video[4]) if isinstance(video[4], timedelta) else video[4]
@@ -180,11 +175,9 @@ def get_channels():
     cursor.execute("SELECT * FROM Channel;")
     channels = cursor.fetchall()
     
-    # Close cursor and connection
     cursor.close()
     conn.close()
 
-    # Convert results to JSON format
     channels_list = []
     for channel in channels:
         channels_list.append({
@@ -209,11 +202,9 @@ def get_notifications():
     cursor.execute("SELECT * FROM Notifications;")
     notifications = cursor.fetchall()
     
-    # Close cursor and connection
     cursor.close()
     conn.close()
 
-    # Convert results to JSON format
     notifications_list = []
     for notification in notifications:
         notifications_list.append({

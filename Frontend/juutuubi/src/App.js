@@ -24,7 +24,6 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          {/* Home Page */}
           <Route
             path="/"
             element={
@@ -51,7 +50,6 @@ function App() {
             }
           />
 
-          {/* All Users Page */}
           <Route path="/all-users" element={<AllUsers />} />
           <Route path="/add-user" element={<AddUser database={selectedDatabase} />} />
           <Route path="/delete-user" element={<DeleteUser />} />

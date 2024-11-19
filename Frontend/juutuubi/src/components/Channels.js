@@ -12,10 +12,10 @@ const Channels = ({ database }) => {
             try {
                 let response;
                 if (database === 'mongo') {
-                    // Fetch channels from the MongoDB endpoint
+                    // Fetch channels from the MongoDB
                     response = await axios.get(`http://127.0.0.1:5000/channels/mongo`);
                 } else {
-                    // Fetch channels from the PostgreSQL endpoint
+                    // Fetch channels from the PostgreSQL
                     response = await axios.get(`http://127.0.0.1:5000/channels?database=${database}`);
                 }
                 console.log('Fetched Channels:', response.data);
