@@ -1,20 +1,31 @@
-// src/components/Videos.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Videos = ({database}) => {
+const Videos = ({ database }) => {
     const [videos, setVideos] = useState([]);
 
     useEffect(() => {
         if (!database) return;
 
-        axios.get(`http://127.0.0.1:5000/videos?database=${database}`)
-            .then(response => {
-                console.log('Fetched videos:', response.data);
+        const fetchVideos = async () => {
+            try {
+                let response;
+                if (database === 'mongo') {
+                    // Fetch videos from MongoDB
+                    response = await axios.get(`http://127.0.0.1:5000/videos/mongo`);
+                } else {
+                    // Fetch videos from PostgreSQL
+                    response = await axios.get(`http://127.0.0.1:5000/videos?database=${database}`);
+                }
+                console.log('Fetched Videos:', response.data);
                 setVideos(response.data);
-            })
-            .catch(error => console.error('Error fetching videos:', error));
-        }, [database]);
+            } catch (error) {
+                console.error('Error fetching Videos:', error);
+            }
+        };
+
+        fetchVideos();
+    }, [database]);
 
     return (
         <div>
@@ -25,20 +36,18 @@ const Videos = ({database}) => {
                         <th>VideoID</th>
                         <th>Title</th>
                         <th>Description</th>
-                        <th>UploadDate</th>
-                        <th>LikesCount</th>
-                        <th>ViewsCount</th>
+                        <th>Views</th>
+                        <th>Likes</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {videos.map(video => (
-                        <tr key={video.VideoID}>
-                            <td>{video.VideoID}</td>
-                            <td>{video.Title}</td>
-                            <td>{video.Description}</td>
-                            <td>{video.UploadDate}</td>
-                            <td>{video.LikesCount}</td>
-                            <td>{video.ViewsCount}</td>
+                    {videos.map((video) => (
+                        <tr key={video.VideoID || video._id}>
+                            <td>{video.VideoID || video._id}</td>
+                            <td>{video.Title || video.title}</td>
+                            <td>{video.Description || video.description}</td>
+                            <td>{video.Views || video.viewscount}</td>
+                            <td>{video.Likes || video.likescount}</td>
                         </tr>
                     ))}
                 </tbody>

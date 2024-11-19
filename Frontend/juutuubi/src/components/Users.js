@@ -7,12 +7,24 @@ const Users = ({ database }) => {
     useEffect(() => {
         if (!database) return;
 
-        axios.get(`http://127.0.0.1:5000/users?database=${database}`)
-            .then(response => {
-                console.log('Fetched users:', response.data);
+        const fetchUsers = async () => {
+            try {
+                let response;
+                if (database === 'mongo') {
+                    // Fetch users from MongoDB
+                    response = await axios.get(`http://127.0.0.1:5000/users/mongo`);
+                } else {
+                    // Fetch users from PostgreSQL
+                    response = await axios.get(`http://127.0.0.1:5000/users?database=${database}`);
+                }
+                console.log('Fetched Users:', response.data);
                 setUsers(response.data);
-            })
-            .catch(error => console.error('Error fetching users:', error));
+            } catch (error) {
+                console.error('Error fetching Users:', error);
+            }
+        };
+
+        fetchUsers();
     }, [database]);
 
     return (
@@ -21,31 +33,23 @@ const Users = ({ database }) => {
             <table>
                 <thead>
                     <tr>
-                        <th>UserID</th>
+                        <th>ID</th>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>JoinDate</th>
                         <th>Country</th>
-                        <th>SubscriptionCount</th>
+                        <th>Subscription Count</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {users.length > 0 ? (
-                        users.map(user => (
-                            <tr key={user.UserID}>
-                                <td>{user.UserID}</td>
-                                <td>{user.Username}</td>
-                                <td>{user.Email}</td>
-                                <td>{user.JoinDate}</td>
-                                <td>{user.Country}</td>
-                                <td>{user.SubscriptionCount}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="6">No users found</td>
+                    {users.map((user) => (
+                        <tr key={user.UserID || user._id}>
+                            <td>{user.UserID || user._id}</td>
+                            <td>{user.Username || user.username}</td>
+                            <td>{user.Email || user.email}</td>
+                            <td>{user.Country || user.country}</td>
+                            <td>{user.SubscriptionCount || user.subscriptioncount}</td>
                         </tr>
-                    )}
+                    ))}
                 </tbody>
             </table>
         </div>
